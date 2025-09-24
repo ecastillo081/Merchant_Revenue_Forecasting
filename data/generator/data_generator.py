@@ -168,8 +168,8 @@ data_dict = {
 }
 
 # export
-xlsx_path = "./merchant_monthly_synthetic.xlsx"
-data_dict_path = "./merchant_monthly_data_dictionary.json"
+xlsx_path = "../raw/merchant_monthly_revenue.xlsx"
+data_dict_path = "../raw/merchant_monthly_data_dictionary.json"
 
 data.to_excel(xlsx_path, index=False)
 
