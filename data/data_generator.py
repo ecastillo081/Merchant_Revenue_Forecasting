@@ -129,8 +129,8 @@ for _, r in meta_df.iterrows():
     orders = np.maximum(np.round(rev / np.maximum(aov, 5.0) + np.random.normal(0, 3, n_months)), 1).astype(int)
 
     # compute simple derived KPIs
-    cac_proxy = mkt_spend / np.maximum(orders, 1)  # $ per order
-    mkt_ratio_realized = mkt_spend / np.maximum(rev, 1)
+    cac = mkt_spend / np.maximum(orders, 1)  # $ per order
+    mktg_rev_ratio = mkt_spend / np.maximum(rev, 1)
 
     for t, d in enumerate(dates):
         rows.append({
@@ -145,17 +145,11 @@ for _, r in meta_df.iterrows():
             "promo_month": int(promos[t]),
             "seasonal_index": round(float(seas[t]), 4),
             "macro_index": round(float(macro[t]), 4),
-            "mkt_ratio_realized": round(float(mkt_ratio_realized[t]), 4),
-            "cac_per_order": round(float(cac_proxy[t]), 2)
+            "mktg_rev_ratio": round(float(mktg_rev_ratio[t]), 4),
+            "cac_per_order": round(float(cac[t]), 2)
         })
 
 data = pd.DataFrame(rows)
-
-# Save dataset and a compact data dictionary
-csv_path = "/mnt/data/merchant_monthly_synthetic.csv"
-data_dict_path = "/mnt/data/merchant_monthly_data_dictionary.json"
-
-data.to_csv(csv_path, index=False)
 
 data_dict = {
     "date": "Month start date (YYYY-MM-DD)",
@@ -169,18 +163,15 @@ data_dict = {
     "promo_month": "1 if a promo ran this month, else 0",
     "seasonal_index": "Merchant-adjusted seasonal multiplier (mean ~1)",
     "macro_index": "Global macro factor multiplier (mean ~1)",
-    "mkt_ratio_realized": "Actual marketing spend / revenue",
-    "cac_per_order": "Marketing spend / orders (proxy CAC)"
+    "mktg_rev_ratio": "Actual marketing spend / revenue",
+    "cac_per_order": "Marketing spend / orders (CAC)"
 }
+
+# export
+xlsx_path = "./merchant_monthly_synthetic.xlsx"
+data_dict_path = "./merchant_monthly_data_dictionary.json"
+
+data.to_excel(xlsx_path, index=False)
 
 with open(data_dict_path, "w") as f:
     json.dump(data_dict, f, indent=2)
-
-# Show a preview
-preview = data.head(10)
-
-# from caas_jupyter_tools import display_dataframe_to_user
-#
-# display_dataframe_to_user("merchant_monthly_synthetic_preview", preview)
-#
-# csv_path, data_dict_path, data.shape, data["merchant_id"].nunique(), data["date"].nunique()
