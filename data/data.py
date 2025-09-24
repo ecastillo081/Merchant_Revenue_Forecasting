@@ -178,8 +178,9 @@ with open(data_dict_path, "w") as f:
 
 # Show a preview
 preview = data.head(10)
-from caas_jupyter_tools import display_dataframe_to_user
 
-display_dataframe_to_user("merchant_monthly_synthetic_preview", preview)
-
-csv_path, data_dict_path, data.shape, data["merchant_id"].nunique(), data["date"].nunique()
+# from caas_jupyter_tools import display_dataframe_to_user
+#
+# display_dataframe_to_user("merchant_monthly_synthetic_preview", preview)
+#
+# csv_path, data_dict_path, data.shape, data["merchant_id"].nunique(), data["date"].nunique()
