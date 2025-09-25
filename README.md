@@ -1,4 +1,4 @@
-# Merchant Revenue Forecasting
+# Merchant Revenue Forecasting (v1)
 
 **Goal:** Forecast monthly merchant revenue across 50 merchants (5 years of data) and compare multiple forecasting methods.  
 **Why:** Advanced forecasting reduces error in budgets and informs resource planning.  
@@ -60,6 +60,11 @@ Synthetic data was generated but designed to mimic realistic FP&A challenges.
 
 - Actual vs forecast for one merchant.  
 - Shows improvement of Holt-Winters/SARIMA over the naive baseline, especially in capturing seasonality.
+
+---
+
+### Next Steps
+Next (V2): Incorporate promotions, marketing spend and macro index as external regressors in SARIMA and advanced ML models (XGBoost, LightGBM).
 
 ---
 
