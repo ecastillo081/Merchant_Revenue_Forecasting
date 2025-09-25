@@ -36,7 +36,7 @@ Synthetic data was generated but designed to mimic realistic FP&A challenges.
 ## Results
 
 ### Average Forecast Error (MAPE)
-![leaderboard](plots/leaderboard_mape.png)
+![leaderboard](figures/leaderboard_mape.png)
 
 - Baseline (Seasonal Naive): ~12–13% MAPE  
 - Best advanced models: Holt-Winters / SARIMA / Linear Regression ~8–10% MAPE  
@@ -45,7 +45,7 @@ Synthetic data was generated but designed to mimic realistic FP&A challenges.
 ---
 
 ### Distribution of Errors (Boxplot)
-![boxplot](plots/boxplot_mape.png)
+![boxplot](figures/boxplot_mape.png)
 
 - Each box = error spread across merchants.  
 - **Orange line:** median error.  
@@ -56,7 +56,7 @@ Synthetic data was generated but designed to mimic realistic FP&A challenges.
 ---
 
 ### Example Merchant Forecast
-![example](plots/M001_actual_vs_forecast.png)
+![example](figures/M001_actual_vs_forecast.png)
 
 - Actual vs forecast for one merchant.  
 - Shows improvement of Holt-Winters/SARIMA over the naive baseline, especially in capturing seasonality.
