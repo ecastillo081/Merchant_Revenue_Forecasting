@@ -15,7 +15,7 @@ df = merchant_revenue_df.copy()
 df["date"] = pd.to_datetime(df["date"]).dt.to_period("M").dt.to_timestamp()
 
 # filter df where merchant_id is "M###"
-m_id = "M029"
+m_id = "M001"
 
 # filter for merchant and set index
 d = df[df["merchant_id"] == m_id].set_index("date")
