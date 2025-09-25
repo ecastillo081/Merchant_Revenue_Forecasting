@@ -1,4 +1,4 @@
-from source.merchant_forecast import forecasts_df, y_test, y_train, m_id
+from source.single_merchant_forecast import forecasts_df, y_test, y_train, m_id
 from functions.metrics import mae, mape, smape, rmse, mase
 import pandas as pd
 from pathlib import Path

@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from source.merchant_forecast import forecasts_df, y_train, m_id
-from source.merchant_forecast_metrics import best_model
+from source.single_merchant_forecast import forecasts_df, y_train, m_id
+from source.single_merchant_forecast_metrics import best_model
 from pathlib import Path
 from matplotlib.ticker import StrMethodFormatter
 from itertools import cycle
