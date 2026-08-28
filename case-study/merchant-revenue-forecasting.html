@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="author" content="Efrain Castillo" />
+  <meta name="description" content="Self-directed portfolio case study: Merchant Revenue Forecasting using synthetic data." />
+  <title>Merchant Revenue Forecasting - Finance Analytics Case Study | Efrain Castillo</title>
+  <link rel="stylesheet" href="case-study.css" />
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <section class="page page-1" aria-label="Page 1">
+    <header class="doc-header">
+      <div class="doc-kicker">
+        <strong>Efrain Castillo</strong>
+        <span>Finance Analytics / FP&amp;A Case Study</span>
+      </div>
+      <h1>Merchant Revenue Forecasting</h1>
+      <p class="subtitle">Benchmarking forecasting methods across a heterogeneous merchant portfolio</p>
+      <div class="badge">Self-directed portfolio project using synthetic data</div>
+    </header>
+
+    <div class="question-box">
+      <div class="question-label">Business Question</div>
+      <p>How can Finance improve monthly merchant revenue forecasting across a diverse merchant portfolio while balancing accuracy, stability, and interpretability?</p>
+    </div>
+
+    <div class="context-grid">
+      <div class="context-card">
+        <div class="label">Portfolio</div>
+        <div class="value">50 synthetic merchants</div>
+      </div>
+      <div class="context-card">
+        <div class="label">History</div>
+        <div class="value">60 months (2020-2024)</div>
+      </div>
+      <div class="context-card">
+        <div class="label">Observations</div>
+        <div class="value">3,000 merchant-months</div>
+      </div>
+      <div class="context-card">
+        <div class="label">Evaluation</div>
+        <div class="value">MAPE, RMSE, MAE</div>
+      </div>
+    </div>
+
+    <div class="headline">
+      <div class="headline-main">
+        <div class="eyebrow">Headline Result</div>
+        <p>Holt achieved the lowest mean MAPE at approximately <strong>8.6%</strong>, versus approximately <strong>12.5%</strong> for the Seasonal Naive baseline.</p>
+      </div>
+      <div class="headline-stat">
+        <div class="big">~31%</div>
+        <div class="desc">relative reduction in mean MAPE versus Seasonal Naive</div>
+      </div>
+    </div>
+
+    <div class="figure-block">
+      <img
+        src="../figures/leaderboard_MAPE.png"
+        alt="Bar chart of average MAPE by forecasting model. Holt is lowest at 8.6%; Seasonal Naive is highest at 12.5%."
+      />
+      <div class="figure-caption">
+        Figure 1. Average forecast error (MAPE) across all 50 merchants. Nine methods were benchmarked on a common 12-month holdout.
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <strong>Takeaway:</strong> More complex models did not automatically outperform simpler, interpretable approaches. Holt provided the strongest average accuracy across this portfolio. This does not mean Holt will always be best for every merchant or future period.
+    </div>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section class="page page-2" aria-label="Page 2">
+    <header class="doc-header">
+      <div class="doc-kicker">
+        <strong>Efrain Castillo</strong>
+        <span>Merchant Revenue Forecasting</span>
+      </div>
+      <h1 class="section-title">Model Performance &amp; Forecast Variability</h1>
+      <p class="subtitle">Portfolio averages and merchant-level error distributions</p>
+    </header>
+
+    <div class="section">
+      <h2>Methods Benchmarked</h2>
+      <ul class="model-list">
+        <li>Naive</li>
+        <li>Seasonal Naive</li>
+        <li>SMA(3)</li>
+        <li>WMA</li>
+        <li>SES</li>
+        <li>Holt</li>
+        <li>Holt-Winters</li>
+        <li>SARIMA</li>
+        <li>Linear Regression</li>
+      </ul>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="figure-block">
+          <img
+            src="../figures/boxplot_MAPE.png"
+            alt="Boxplot of MAPE distribution by forecasting model across merchants."
+          />
+          <div class="figure-caption">
+            Figure 2. Distribution of merchant-level MAPE by model. Means (green triangles) and medians (orange lines) show both central tendency and spread.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section">
+          <h2>Verified Mean MAPE</h2>
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th style="text-align:right;">Mean MAPE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="best"><td>Holt</td><td class="num">8.64%</td></tr>
+              <tr><td>SES</td><td class="num">9.08%</td></tr>
+              <tr><td>SMA(3)</td><td class="num">9.34%</td></tr>
+              <tr><td>Holt-Winters</td><td class="num">9.54%</td></tr>
+              <tr><td>WMA</td><td class="num">9.60%</td></tr>
+              <tr><td>Linear Regression</td><td class="num">9.66%</td></tr>
+              <tr><td>Naive</td><td class="num">11.68%</td></tr>
+              <tr><td>SARIMA</td><td class="num">11.81%</td></tr>
+              <tr class="baseline"><td>Seasonal Naive</td><td class="num">12.47%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <h2>Why Distribution Matters</h2>
+          <ul class="bullets">
+            <li>Portfolio averages alone can hide merchant-level variation.</li>
+            <li>Model performance differed across merchants.</li>
+            <li>Finance should evaluate both average forecast error and the distribution of error.</li>
+            <li>Forecasting governance should identify merchants with greater uncertainty rather than relying solely on one portfolio-wide score.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway" style="margin-top: 12px;">
+      <strong>Governance note:</strong> Greater model complexity did not guarantee better average performance. SARIMA (~11.81% mean MAPE) was not among the strongest average performers in this benchmark.
+    </div>
+  </section>
+
+  <!-- PAGE 3 -->
+  <section class="page page-3" aria-label="Page 3">
+    <header class="doc-header">
+      <div class="doc-kicker">
+        <strong>Efrain Castillo</strong>
+        <span>Merchant Revenue Forecasting</span>
+      </div>
+      <h1 class="section-title">Merchant Example &amp; FP&amp;A Implications</h1>
+      <p class="subtitle">Illustrative forecast path and planning takeaways</p>
+    </header>
+
+    <div class="figure-block">
+      <img
+        src="../figures/M001_actual_vs_forecast.png"
+        alt="Actual versus forecast revenue for merchant M001 over the holdout period."
+      />
+      <div class="figure-caption">
+        Figure 3. Illustrative single-merchant example (M001): held-out actuals versus competing forecasts. This view complements portfolio averages with a merchant-level path comparison.
+      </div>
+    </div>
+
+    <div class="split-notes">
+      <div class="panel implications">
+        <h2>FP&amp;A Implications</h2>
+        <ul>
+          <li>More reliable merchant-level forecasts can improve revenue planning.</li>
+          <li>Forecast-error monitoring can help Finance distinguish predictable merchants from higher-uncertainty merchants.</li>
+          <li>Model benchmarking provides a disciplined baseline before introducing additional complexity.</li>
+          <li>Forecast performance should be refreshed as new actuals arrive.</li>
+          <li>Different merchant behaviors may justify different models rather than forcing one methodology across every merchant.</li>
+        </ul>
+      </div>
+
+      <div class="panel limitations">
+        <h2>Limitations</h2>
+        <ul>
+          <li>Synthetic data — designed to mimic FP&amp;A challenges, not represent a real portfolio.</li>
+          <li>Results may not generalize to real merchant businesses.</li>
+          <li>No causal interpretation of drivers or interventions.</li>
+          <li>No production deployment claim.</li>
+          <li>Model rankings can change as new observations arrive.</li>
+          <li>External drivers may improve forecasts but were not the focus of this benchmark.</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="doc-footer">
+      <div class="tech-line">
+        <strong>Tools:</strong> Python · pandas · statsmodels · scikit-learn · matplotlib<br />
+        Self-directed portfolio project using synthetic data · efrainfinance.com
+      </div>
+      <div class="repo-link">
+        <span class="label">View technical methodology and code</span>
+        <a href="https://github.com/ecastillo081/Merchant_Revenue_Forecasting">https://github.com/ecastillo081/Merchant_Revenue_Forecasting</a>
+      </div>
+    </footer>
+  </section>
+
+</body>
+</html>

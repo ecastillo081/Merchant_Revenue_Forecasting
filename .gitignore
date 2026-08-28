@@ -32,3 +32,6 @@ PROJECT_CONTEXT_MERCHANT_REVENUE.md
 # Generated intermediate Excel outputs (regenerate via scripts)
 data/transformed/*
 !data/transformed/.gitkeep
+
+# Local case-study preview renders
+case-study/_preview/
