@@ -36,7 +36,7 @@ def linear_regression_forecast(df_merchant, h):
     X = pd.concat(
         [g[["marketing_spend","promo_month","macro_index","rev_lag1","rev_lag12"]], month_dummies],
         axis=1
-    ).fillna(method="bfill").fillna(0)
+    ).bfill().fillna(0)
 
     y_train, y_test = y.iloc[:-h], y.iloc[-h:]
     Xtr, Xte = X.iloc[:-h], X.iloc[-h:]

@@ -1,5 +1,34 @@
-.venv
-README.md
-data/generator
-.idea
+# Virtual environments
+.venv/
+venv/
+env/
 
+# Environment / secrets
+.env
+.env.*
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# IDE / editor metadata
+.idea/
+.vscode/
+*.iml
+
+# OS / temp
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Internal development notes (keep local; not for public portfolio)
+PROJECT_CONTEXT_MERCHANT_REVENUE.md
+
+# Generated intermediate Excel outputs (regenerate via scripts)
+data/transformed/*
+!data/transformed/.gitkeep
