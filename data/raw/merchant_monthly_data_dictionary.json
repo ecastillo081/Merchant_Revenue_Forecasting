@@ -1,0 +1,15 @@
+{
+  "date": "Month start date (YYYY-MM-DD)",
+  "merchant_id": "Unique merchant identifier (M001..M050)",
+  "region": "US region (West, Midwest, Northeast, South)",
+  "vertical": "Industry vertical (Retail, Food & Bev, Services, Digital Goods)",
+  "revenue": "Monthly gross sales revenue in USD",
+  "orders": "Monthly order count (integer)",
+  "avg_order_value": "Average order value in USD",
+  "marketing_spend": "Monthly marketing spend in USD",
+  "promo_month": "1 if a promo ran this month, else 0",
+  "seasonal_index": "Merchant-adjusted seasonal multiplier (mean ~1)",
+  "macro_index": "Global macro factor multiplier (mean ~1)",
+  "mktg_rev_ratio": "Actual marketing spend / revenue",
+  "cac_per_order": "Marketing spend / orders (CAC)"
+}
