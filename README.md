@@ -176,3 +176,7 @@ No cloud services, API keys, or environment variables are required.
 - scikit-learn
 - matplotlib
 - openpyxl
+
+---
+
+**More finance projects and management-ready case studies: [efrainfinance.com](https://efrainfinance.com/)**
