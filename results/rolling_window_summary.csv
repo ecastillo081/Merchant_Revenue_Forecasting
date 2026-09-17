@@ -1,0 +1,10 @@
+rank_common_set,model,mean_mape_across_windows,comparison_set,mean_mape_2022,mean_mape_2023,mean_mape_2024
+1.0,SES,9.747877840437118,models eligible in every rolling window,10.734975877326326,9.424815044903726,9.083842599081299
+2.0,SMA(3),9.842177912844985,models eligible in every rolling window,10.31426067661813,9.8706559866917,9.341617075225127
+3.0,Holt,9.884554538983975,models eligible in every rolling window,12.306123437454676,8.706389297991773,8.641150881505478
+4.0,"WMA(1,2,3)",10.109009133938164,models eligible in every rolling window,10.71337533556522,10.01383489350699,9.59981717274228
+5.0,Holt-Winters,10.86497773645302,models eligible in every rolling window,13.694525179249665,9.359270679365329,9.54113735074406
+6.0,Naive,11.835552924526809,models eligible in every rolling window,12.993588354121789,10.833127337233345,11.679943082225293
+7.0,Seasonal Naive,12.512395350356536,models eligible in every rolling window,12.858756399642148,12.211188768358006,12.467240883069458
+,Driver Scenario Regression,,excluded from like-for-like rolling rank; incomplete window coverage,,16.678049929643226,12.477934108560744
+,SARIMA,,excluded from like-for-like rolling rank; incomplete window coverage,,26.89665002519299,11.81123641820118

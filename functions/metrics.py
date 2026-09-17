@@ -1,6 +1,8 @@
-import numpy as np
 import math
+
+import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+
 
 def mape(y_true, y_pred):
     y_true = np.asarray(y_true, dtype=float)
@@ -30,3 +32,22 @@ def mase(y_train, y_true, y_pred, m=12):
     d_season = np.abs(y_train[m:] - y_train[:-m]).mean() if len(y_train) > m else np.nan
     denom = d_season if (d_season and not np.isnan(d_season) and d_season != 0) else 1e-8
     return np.abs(y_true - y_pred).mean() / denom
+
+
+def iqr(values) -> float:
+    arr = np.asarray(values, dtype=float)
+    if arr.size == 0:
+        return float("nan")
+    return float(np.percentile(arr, 75) - np.percentile(arr, 25))
+
+
+def point_difference(baseline: float, challenger: float) -> float:
+    """Percentage-point improvement (baseline minus challenger)."""
+    return float(baseline - challenger)
+
+
+def relative_reduction(baseline: float, challenger: float) -> float:
+    """Relative percentage reduction versus the baseline error."""
+    if baseline == 0:
+        return float("nan")
+    return float((baseline - challenger) / baseline) * 100

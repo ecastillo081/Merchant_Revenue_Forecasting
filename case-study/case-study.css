@@ -1,14 +1,15 @@
-/* Merchant Revenue Forecasting — portfolio case study print styles */
+/* Merchant Revenue Forecasting — two-page executive case */
 
 :root {
-  --ink: #1a2332;
-  --muted: #5a6575;
-  --line: #d8dee8;
-  --soft: #f4f6f9;
-  --accent: #1f4e79;
-  --accent-soft: #e8eef5;
-  --highlight: #0f3d63;
+  --ink: #15202b;
+  --muted: #4c5660;
+  --line: #d6d2c8;
+  --soft: #f5f4f1;
+  --accent: #1a4554;
+  --accent-soft: #e6eef0;
+  --highlight: #123743;
   --white: #ffffff;
+  --baseline: #c05621;
 }
 
 * {
@@ -22,15 +23,15 @@ body {
   background: var(--white);
   color: var(--ink);
   font-family: "Segoe UI", Calibri, "Helvetica Neue", Arial, sans-serif;
-  font-size: 10pt;
-  line-height: 1.38;
+  font-size: 9.4pt;
+  line-height: 1.36;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
 
 @page {
   size: letter;
-  margin: 0.48in 0.58in 0.45in 0.58in;
+  margin: 0.42in 0.52in 0.4in 0.52in;
 }
 
 .page {
@@ -40,8 +41,7 @@ body {
   flex-direction: column;
 }
 
-.page-2,
-.page-3 {
+.page-2 {
   page-break-before: always;
   break-before: page;
 }
@@ -53,8 +53,8 @@ body {
 
 .doc-header {
   border-bottom: 2px solid var(--accent);
-  padding-bottom: 7px;
-  margin-bottom: 10px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .doc-kicker {
@@ -62,8 +62,8 @@ body {
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 4px;
-  font-size: 8pt;
+  margin-bottom: 3px;
+  font-size: 7.5pt;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
@@ -76,39 +76,39 @@ body {
 
 h1 {
   margin: 0 0 2px;
-  font-size: 20pt;
-  line-height: 1.12;
+  font-size: 18.5pt;
+  line-height: 1.1;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.01em;
 }
 
 h1.section-title {
-  font-size: 15pt;
+  font-size: 14pt;
 }
 
 .subtitle {
   margin: 0;
-  font-size: 10.5pt;
+  font-size: 10pt;
   color: var(--muted);
   font-weight: 400;
 }
 
 .badge {
   display: inline-block;
-  margin-top: 7px;
-  padding: 3px 9px;
+  margin-top: 6px;
+  padding: 2px 8px;
   background: var(--accent-soft);
   color: var(--highlight);
-  border: 1px solid #c5d4e6;
+  border: 1px solid #c5d4dc;
   border-radius: 3px;
-  font-size: 8pt;
+  font-size: 7.5pt;
   font-weight: 600;
 }
 
 h2 {
-  margin: 0 0 6px;
-  font-size: 11pt;
+  margin: 0 0 4px;
+  font-size: 10.5pt;
   color: var(--accent);
   font-weight: 700;
 }
@@ -120,40 +120,40 @@ p {
 .question-box {
   background: var(--soft);
   border-left: 4px solid var(--accent);
-  padding: 8px 12px;
-  margin: 0 0 10px;
+  padding: 7px 11px;
+  margin: 0 0 8px;
 }
 
 .question-label {
-  font-size: 7.5pt;
+  font-size: 7.2pt;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--accent);
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .question-box p {
   margin: 0;
-  font-size: 10.5pt;
+  font-size: 10pt;
   font-weight: 550;
 }
 
 .context-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-  margin: 0 0 10px;
+  gap: 6px;
+  margin: 0 0 8px;
 }
 
 .context-card {
   border: 1px solid var(--line);
   border-radius: 3px;
-  padding: 7px 8px;
+  padding: 6px 7px;
 }
 
 .context-card .label {
-  font-size: 7pt;
+  font-size: 6.7pt;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
@@ -161,38 +161,44 @@ p {
 }
 
 .context-card .value {
-  font-size: 9.5pt;
+  font-size: 9pt;
   font-weight: 650;
   line-height: 1.2;
 }
 
+.method-line {
+  margin: 0 0 8px;
+  font-size: 8.7pt;
+  color: var(--ink);
+}
+
 .headline {
   display: grid;
-  grid-template-columns: 1.6fr 0.8fr;
-  gap: 10px;
-  margin: 0 0 9px;
+  grid-template-columns: 1.55fr 0.85fr;
+  gap: 8px;
+  margin: 0 0 8px;
 }
 
 .headline-main {
   background: var(--accent);
   color: var(--white);
   border-radius: 3px;
-  padding: 11px 13px;
+  padding: 9px 11px;
 }
 
 .headline-main .eyebrow {
-  font-size: 7.5pt;
+  font-size: 7.2pt;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   opacity: 0.85;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   font-weight: 600;
 }
 
 .headline-main p {
   margin: 0;
-  font-size: 11.5pt;
-  line-height: 1.3;
+  font-size: 10.4pt;
+  line-height: 1.28;
   font-weight: 600;
 }
 
@@ -200,7 +206,7 @@ p {
   background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 3px;
-  padding: 10px 10px;
+  padding: 8px 9px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -208,7 +214,7 @@ p {
 }
 
 .headline-stat .big {
-  font-size: 26pt;
+  font-size: 23pt;
   font-weight: 750;
   color: var(--accent);
   line-height: 1;
@@ -216,20 +222,19 @@ p {
 }
 
 .headline-stat .desc {
-  font-size: 8.5pt;
+  font-size: 8pt;
   color: var(--muted);
   line-height: 1.25;
   font-weight: 550;
 }
 
 .figure-block {
-  margin: 0 0 7px;
+  margin: 0 0 6px;
 }
 
 .figure-block img {
   width: 100%;
   height: auto;
-  max-height: 3.55in;
   object-fit: contain;
   object-position: center top;
   display: block;
@@ -239,31 +244,27 @@ p {
 }
 
 .page-1 .figure-block img {
-  max-height: 3.35in;
+  max-height: 3.5in;
 }
 
 .page-2 .figure-block img {
-  max-height: 4.5in;
-}
-
-.page-3 .figure-block img {
-  max-height: 3.15in;
+  max-height: 2.15in;
 }
 
 .figure-caption {
-  margin-top: 4px;
-  font-size: 8pt;
+  margin-top: 3px;
+  font-size: 7.6pt;
   color: var(--muted);
   font-style: italic;
 }
 
 .takeaway {
-  margin-top: auto;
+  margin-top: 4px;
   background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 3px;
-  padding: 8px 10px;
-  font-size: 9.5pt;
+  padding: 7px 9px;
+  font-size: 8.8pt;
 }
 
 .takeaway strong {
@@ -272,67 +273,9 @@ p {
 
 .two-col {
   display: grid;
-  grid-template-columns: 1.35fr 0.9fr;
-  gap: 12px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
   align-items: start;
-  flex: 1;
-}
-
-.model-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0 0 9px;
-  padding: 0;
-  list-style: none;
-}
-
-.model-list li {
-  background: var(--soft);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  padding: 2px 7px;
-  font-size: 8pt;
-  font-weight: 550;
-}
-
-.metrics-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 8.5pt;
-  margin: 0 0 8px;
-}
-
-.metrics-table th,
-.metrics-table td {
-  padding: 4px 7px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-}
-
-.metrics-table th {
-  background: var(--soft);
-  color: var(--muted);
-  font-size: 7pt;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-}
-
-.metrics-table td.num {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-}
-
-.metrics-table tr.best td {
-  background: var(--accent-soft);
-  color: var(--highlight);
-  font-weight: 700;
-}
-
-.metrics-table tr.baseline td {
-  color: var(--muted);
 }
 
 .bullets {
@@ -341,8 +284,8 @@ p {
 }
 
 .bullets li {
-  margin-bottom: 5px;
-  font-size: 9pt;
+  margin-bottom: 4px;
+  font-size: 8.5pt;
 }
 
 .bullets li:last-child {
@@ -350,20 +293,20 @@ p {
 }
 
 .section {
-  margin-bottom: 9px;
+  margin-bottom: 8px;
 }
 
 .split-notes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 8px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .panel {
   border: 1px solid var(--line);
   border-radius: 3px;
-  padding: 8px 10px;
+  padding: 7px 9px;
   background: var(--white);
 }
 
@@ -382,8 +325,8 @@ p {
 }
 
 .panel li {
-  margin-bottom: 4px;
-  font-size: 8.8pt;
+  margin-bottom: 3px;
+  font-size: 8.1pt;
 }
 
 .panel li:last-child {
@@ -391,17 +334,17 @@ p {
 }
 
 .doc-footer {
-  margin-top: auto;
-  padding-top: 9px;
+  margin-top: 8px;
+  padding-top: 7px;
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 10px;
   align-items: end;
 }
 
 .tech-line {
-  font-size: 8pt;
+  font-size: 7.6pt;
   color: var(--muted);
 }
 
@@ -411,7 +354,7 @@ p {
 }
 
 .repo-link {
-  font-size: 8pt;
+  font-size: 7.6pt;
   text-align: right;
 }
 
@@ -431,7 +374,7 @@ p {
 
 @media screen {
   body {
-    background: #e9edf2;
+    background: #eceae4;
     padding: 24px;
   }
 
@@ -442,7 +385,7 @@ p {
     overflow: visible;
     margin: 0 auto 24px;
     background: var(--white);
-    padding: 0.48in 0.58in;
-    box-shadow: 0 1px 8px rgba(26, 35, 50, 0.12);
+    padding: 0.42in 0.52in;
+    box-shadow: 0 1px 8px rgba(21, 32, 43, 0.12);
   }
 }

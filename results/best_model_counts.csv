@@ -1,0 +1,10 @@
+model,best_model_count,best_model_pct,n_merchants,window
+Holt,17,34.0,50,2024
+SES,7,14.0,50,2024
+SMA(3),5,10.0,50,2024
+Holt-Winters,8,16.0,50,2024
+"WMA(1,2,3)",4,8.0,50,2024
+Naive,3,6.0,50,2024
+SARIMA,3,6.0,50,2024
+Seasonal Naive,1,2.0,50,2024
+Driver Scenario Regression,2,4.0,50,2024

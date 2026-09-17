@@ -1,85 +1,49 @@
+"""Optional diagnostic: origin-safe forecasts for a single merchant."""
+
+from __future__ import annotations
+
+import argparse
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
-from statsmodels.tsa.holtwinters import SimpleExpSmoothing, ExponentialSmoothing
-from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from functions.forecast_methods import (
-    H,
-    naive_forecast,
-    seasonal_naive_forecast,
-    sma_forecast,
-    wma_forecast,
-)
+from functions.config import PRIMARY_WINDOW
+from functions.evaluation import WindowSpec, evaluate_merchant_window
+from source.all_merchants import RAW_PATH, window_specs
 
-RAW_PATH = ROOT / "data" / "raw" / "merchant_monthly_revenue.xlsx"
 TRANSFORMED_DIR = ROOT / "data" / "transformed"
 
-# Illustrative single-merchant example (not the full nine-model portfolio benchmark)
-merchant_revenue_df = pd.read_excel(RAW_PATH)
 
-df = merchant_revenue_df.copy()
-df["date"] = pd.to_datetime(df["date"]).dt.to_period("M").dt.to_timestamp()
-
-m_id = "M001"
-
-d = df[df["merchant_id"] == m_id].set_index("date")
-y = d["revenue"].astype(float)
-y_train, y_test = y.iloc[:-H], y.iloc[-H:]
-
-ses = SimpleExpSmoothing(y_train).fit(optimized=True)
-ses_fc = ses.forecast(H)
-
-holt = ExponentialSmoothing(y_train, trend="add", seasonal=None).fit(optimized=True)
-holt_fc = holt.forecast(H)
-
-hw = ExponentialSmoothing(
-    y_train, trend="add", seasonal="mul", seasonal_periods=12
-).fit(optimized=True)
-hw_fc = hw.forecast(H)
-
-sarima = SARIMAX(
-    y_train,
-    order=(1, 1, 1),
-    seasonal_order=(1, 1, 1, 12),
-    enforce_stationarity=False,
-    enforce_invertibility=False,
-).fit(disp=False)
-sarima_fc = sarima.forecast(H)
-
-preds = {
-    "Naive": naive_forecast(y_train, H),
-    "Seasonal Naive": seasonal_naive_forecast(y_train, H, 12),
-    "SMA(3)": sma_forecast(y_train, H, 3),
-    "WMA": wma_forecast(y_train, H, (1, 2, 3)),
-    "SES": ses_fc,
-    "Holt": holt_fc,
-    "Holt-Winters": hw_fc,
-    "SARIMA": sarima_fc,
-}
+def run(merchant_id: str = "M001", window_id: str = PRIMARY_WINDOW) -> pd.DataFrame:
+    df = pd.read_excel(RAW_PATH)
+    df["date"] = pd.to_datetime(df["date"])
+    windows = {w.window_id: w for w in window_specs()}
+    if window_id not in windows:
+        raise ValueError(f"Unknown window {window_id}")
+    window: WindowSpec = windows[window_id]
+    g = df.loc[df["merchant_id"].astype(str) == merchant_id].copy()
+    _, forecast_rows, coverage = evaluate_merchant_window(g, merchant_id, window)
+    failed = [row for row in coverage if row["status"] == "failed"]
+    if failed:
+        raise RuntimeError(f"Forecast failure for {merchant_id}: {failed}")
+    forecasts = pd.DataFrame(forecast_rows)
+    wide = forecasts.pivot(index="date", columns="model", values="forecast")
+    wide.insert(0, "Actual", forecasts.drop_duplicates("date").set_index("date")["actual"])
+    wide.insert(0, "merchant_id", merchant_id)
+    TRANSFORMED_DIR.mkdir(parents=True, exist_ok=True)
+    wide.to_excel(TRANSFORMED_DIR / f"{merchant_id}_forecast.xlsx")
+    return wide
 
 
-def forecasts_to_df(preds_dict, y_test_index):
-    df_out = pd.DataFrame(index=y_test_index)
-    for name, fc in preds_dict.items():
-        if fc is None:
-            continue
-        fc = np.asarray(fc, dtype=float).ravel()
-        if len(fc) != len(y_test_index):
-            raise ValueError(f"{name}: expected {len(y_test_index)} steps, got {len(fc)}")
-        df_out[name] = fc
-    return df_out
-
-
-forecasts_df = forecasts_to_df(preds, y_test.index)
-forecasts_df.insert(0, "Actual", y_test.values)
-forecasts_df.insert(0, "merchant_id", m_id)
-
-TRANSFORMED_DIR.mkdir(parents=True, exist_ok=True)
-forecasts_df.to_excel(TRANSFORMED_DIR / f"{m_id}_forecast.xlsx")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Origin-safe single-merchant diagnostic")
+    parser.add_argument("--merchant-id", default="M001")
+    parser.add_argument("--window", default=PRIMARY_WINDOW)
+    args = parser.parse_args()
+    out = run(args.merchant_id, args.window)
+    print(out.head())

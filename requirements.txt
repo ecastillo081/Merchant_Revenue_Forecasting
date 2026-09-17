@@ -4,3 +4,5 @@ scikit-learn
 statsmodels
 matplotlib
 openpyxl
+pytest
+pymupdf

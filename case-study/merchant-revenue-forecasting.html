@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- PAGE 1 -->
   <section class="page page-1" aria-label="Page 1">
     <header class="doc-header">
       <div class="doc-kicker">
@@ -17,13 +16,13 @@
         <span>Finance Analytics / FP&amp;A Case Study</span>
       </div>
       <h1>Merchant Revenue Forecasting</h1>
-      <p class="subtitle">Benchmarking forecasting methods across a heterogeneous merchant portfolio</p>
+      <p class="subtitle">Choosing a governable default for 12-month merchant-level planning</p>
       <div class="badge">Self-directed portfolio project using synthetic data</div>
     </header>
 
     <div class="question-box">
-      <div class="question-label">Business Question</div>
-      <p>How can Finance improve monthly merchant revenue forecasting across a diverse merchant portfolio while balancing accuracy, stability, and interpretability?</p>
+      <div class="question-label">Business Problem</div>
+      <p>Which forecasting method should Finance use as the default 12-month merchant-revenue forecast, and when should merchant-level performance justify an exception?</p>
     </div>
 
     <div class="context-grid">
@@ -33,168 +32,102 @@
       </div>
       <div class="context-card">
         <div class="label">History</div>
-        <div class="value">60 months (2020-2024)</div>
+        <div class="value">60 months (2020–2024)</div>
       </div>
       <div class="context-card">
         <div class="label">Observations</div>
         <div class="value">3,000 merchant-months</div>
       </div>
       <div class="context-card">
-        <div class="label">Evaluation</div>
-        <div class="value">MAPE, RMSE, MAE</div>
+        <div class="label">Primary metric</div>
+        <div class="value">Unweighted mean MAPE</div>
       </div>
     </div>
 
+    <p class="method-line">Finance needs a repeatable forecast across merchants with different growth, seasonality, and volatility. The 2024 result uses 48 months of training history and a common 12-month holdout. Rolling-origin checks forecast 2022, 2023, and 2024 from each prior year-end. Seasonal Naive is the planning baseline. Driver Scenario Regression uses origin-safe planning assumptions, not realized holdout drivers. MAPE is an unweighted mean of merchant-level error, not a revenue-weighted portfolio score.</p>
+
     <div class="headline">
       <div class="headline-main">
-        <div class="eyebrow">Headline Result</div>
-        <p>Holt achieved the lowest mean MAPE at approximately <strong>8.6%</strong>, versus approximately <strong>12.5%</strong> for the Seasonal Naive baseline.</p>
+        <div class="eyebrow">2024 Holdout Result</div>
+        <p>Holt achieved the lowest mean merchant-level MAPE at <strong>8.64%</strong>, compared with <strong>12.47%</strong> for Seasonal Naive. That is a 3.83 percentage-point improvement, or a 30.7% relative reduction in forecast error.</p>
       </div>
       <div class="headline-stat">
-        <div class="big">~31%</div>
-        <div class="desc">relative reduction in mean MAPE versus Seasonal Naive</div>
+        <div class="big">30.7%</div>
+        <div class="desc">relative reduction versus Seasonal Naive on the 2024 holdout</div>
       </div>
     </div>
 
     <div class="figure-block">
       <img
         src="../figures/leaderboard_MAPE.png"
-        alt="Bar chart of average MAPE by forecasting model. Holt is lowest at 8.6%; Seasonal Naive is highest at 12.5%."
+        alt="Bar chart of unweighted mean merchant-level MAPE by model. Holt is lowest at 8.64%; Seasonal Naive is 12.47%."
       />
       <div class="figure-caption">
-        Figure 1. Average forecast error (MAPE) across all 50 merchants. Nine methods were benchmarked on a common 12-month holdout.
+        Figure 1. Unweighted mean of merchant-level MAPE across 50 merchants, 12-month 2024 holdout. Holt is highlighted as the 2024 champion; Seasonal Naive is the planning baseline.
       </div>
     </div>
 
     <div class="takeaway">
-      <strong>Takeaway:</strong> More complex models did not automatically outperform simpler, interpretable approaches. Holt provided the strongest average accuracy across this portfolio. This does not mean Holt will always be best for every merchant or future period.
+      <strong>Interpretation:</strong> Additional complexity did not automatically improve accuracy. After leakage was removed, Driver Scenario Regression had a 12.48% mean MAPE and SARIMA 11.81%, while simpler smoothing methods occupied the strongest 2024 positions. Holt was best for 17 of 50 merchants (34%). Rolling-origin results do not support treating Holt as a time-robust default: SES had the lowest average error across 2022–2024.
     </div>
   </section>
 
-  <!-- PAGE 2 -->
   <section class="page page-2" aria-label="Page 2">
     <header class="doc-header">
       <div class="doc-kicker">
         <strong>Efrain Castillo</strong>
         <span>Merchant Revenue Forecasting</span>
       </div>
-      <h1 class="section-title">Model Performance &amp; Forecast Variability</h1>
-      <p class="subtitle">Portfolio averages and merchant-level error distributions</p>
-    </header>
-
-    <div class="section">
-      <h2>Methods Benchmarked</h2>
-      <ul class="model-list">
-        <li>Naive</li>
-        <li>Seasonal Naive</li>
-        <li>SMA(3)</li>
-        <li>WMA</li>
-        <li>SES</li>
-        <li>Holt</li>
-        <li>Holt-Winters</li>
-        <li>SARIMA</li>
-        <li>Linear Regression</li>
-      </ul>
-    </div>
-
-    <div class="two-col">
-      <div>
-        <div class="figure-block">
-          <img
-            src="../figures/boxplot_MAPE.png"
-            alt="Boxplot of MAPE distribution by forecasting model across merchants."
-          />
-          <div class="figure-caption">
-            Figure 2. Distribution of merchant-level MAPE by model. Means (green triangles) and medians (orange lines) show both central tendency and spread.
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="section">
-          <h2>Verified Mean MAPE</h2>
-          <table class="metrics-table">
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th style="text-align:right;">Mean MAPE</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="best"><td>Holt</td><td class="num">8.64%</td></tr>
-              <tr><td>SES</td><td class="num">9.08%</td></tr>
-              <tr><td>SMA(3)</td><td class="num">9.34%</td></tr>
-              <tr><td>Holt-Winters</td><td class="num">9.54%</td></tr>
-              <tr><td>WMA</td><td class="num">9.60%</td></tr>
-              <tr><td>Linear Regression</td><td class="num">9.66%</td></tr>
-              <tr><td>Naive</td><td class="num">11.68%</td></tr>
-              <tr><td>SARIMA</td><td class="num">11.81%</td></tr>
-              <tr class="baseline"><td>Seasonal Naive</td><td class="num">12.47%</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="section">
-          <h2>Why Distribution Matters</h2>
-          <ul class="bullets">
-            <li>Portfolio averages alone can hide merchant-level variation.</li>
-            <li>Model performance differed across merchants.</li>
-            <li>Finance should evaluate both average forecast error and the distribution of error.</li>
-            <li>Forecasting governance should identify merchants with greater uncertainty rather than relying solely on one portfolio-wide score.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="takeaway" style="margin-top: 12px;">
-      <strong>Governance note:</strong> Greater model complexity did not guarantee better average performance. SARIMA (~11.81% mean MAPE) was not among the strongest average performers in this benchmark.
-    </div>
-  </section>
-
-  <!-- PAGE 3 -->
-  <section class="page page-3" aria-label="Page 3">
-    <header class="doc-header">
-      <div class="doc-kicker">
-        <strong>Efrain Castillo</strong>
-        <span>Merchant Revenue Forecasting</span>
-      </div>
-      <h1 class="section-title">Merchant Example &amp; FP&amp;A Implications</h1>
-      <p class="subtitle">Illustrative forecast path and planning takeaways</p>
+      <h1 class="section-title">Merchant Variation, Recommendation, and Governance</h1>
+      <p class="subtitle">Use the 2024 champion with challengers, then manage exceptions by merchant</p>
     </header>
 
     <div class="figure-block">
       <img
-        src="../figures/M001_actual_vs_forecast.png"
-        alt="Actual versus forecast revenue for merchant M001 over the holdout period."
+        src="../figures/boxplot_MAPE.png"
+        alt="Boxplot of merchant-level MAPE by model, ordered from lowest to highest mean error. Whiskers show 1.5 times the interquartile range."
       />
       <div class="figure-caption">
-        Figure 3. Illustrative single-merchant example (M001): held-out actuals versus competing forecasts. This view complements portfolio averages with a merchant-level path comparison.
+        Figure 2. Merchant-level MAPE distribution, same order as Figure 1. Whiskers are 1.5× IQR. Holt combined low average error with a comparatively contained distribution versus weaker methods, although no method eliminated variation across merchants.
+      </div>
+    </div>
+    <div class="figure-block">
+      <img
+        src="../figures/representative_merchant_forecast.png"
+        alt="Actual revenue versus Holt and Seasonal Naive forecasts for representative merchant M048."
+      />
+      <div class="figure-caption">
+        Figure 3. Merchant M048 is shown because its Holt MAPE (8.38%) is closest to the 50-merchant median (8.40%). Only the 2024 champion and the Seasonal Naive baseline are plotted.
       </div>
     </div>
 
     <div class="split-notes">
       <div class="panel implications">
-        <h2>FP&amp;A Implications</h2>
+        <h2>Planning Recommendation</h2>
         <ul>
-          <li>More reliable merchant-level forecasts can improve revenue planning.</li>
-          <li>Forecast-error monitoring can help Finance distinguish predictable merchants from higher-uncertainty merchants.</li>
-          <li>Model benchmarking provides a disciplined baseline before introducing additional complexity.</li>
-          <li>Forecast performance should be refreshed as new actuals arrive.</li>
-          <li>Different merchant behaviors may justify different models rather than forcing one methodology across every merchant.</li>
+          <li>Treat Holt as the 2024 champion, not a permanent default. SES had the lowest average error across the 2022–2024 rolling windows (9.75% vs 9.88% for Holt), because Holt deteriorated in the 2022 origin (12.31%).</li>
+          <li>Retain Seasonal Naive as the minimum-performance benchmark for every planning cycle.</li>
+          <li>Run Holt, SES, and SMA(3) as a champion/challenger set on the same cutoff and 12-month horizon.</li>
+          <li>Permit a merchant-level override only when another method produces consistently lower error across multiple forecast windows.</li>
+          <li>Maintain a high-uncertainty watchlist for merchants with persistently elevated or volatile error; give those names wider ranges, partner input, and explicit upside/downside scenarios.</li>
         </ul>
       </div>
-
       <div class="panel limitations">
         <h2>Limitations</h2>
         <ul>
-          <li>Synthetic data — designed to mimic FP&amp;A challenges, not represent a real portfolio.</li>
+          <li>The dataset is synthetic and does not represent an employer or customer portfolio.</li>
           <li>Results may not generalize to real merchant businesses.</li>
-          <li>No causal interpretation of drivers or interventions.</li>
-          <li>No production deployment claim.</li>
-          <li>Model rankings can change as new observations arrive.</li>
-          <li>External drivers may improve forecasts but were not the focus of this benchmark.</li>
+          <li>Primary MAPE is an unweighted mean across merchants, not portfolio-dollar forecast error.</li>
+          <li>This work does not claim production deployment or realized business savings.</li>
+          <li>Driver forecasts depend on planning assumptions available at the origin.</li>
+          <li>Rankings can change as new actuals arrive; confirm selection through rolling-origin backtesting.</li>
+          <li>SARIMA and Driver Scenario Regression were not eligible for the 2022 window because they require 36 months of training history.</li>
         </ul>
       </div>
+    </div>
+
+    <div class="takeaway">
+      <strong>Takeaway for finance leaders:</strong> The best forecasting process is not necessarily the most technically complex. A transparent champion, an objective baseline, rolling-origin checks, and disciplined exception monitoring can provide a more governable planning process than selecting models by sophistication alone.
     </div>
 
     <footer class="doc-footer">
@@ -203,8 +136,9 @@
         Self-directed portfolio project using synthetic data · efrainfinance.com
       </div>
       <div class="repo-link">
-        <span class="label">View technical methodology and code</span>
-        <a href="https://github.com/ecastillo081/Merchant_Revenue_Forecasting">https://github.com/ecastillo081/Merchant_Revenue_Forecasting</a>
+        <span class="label">Case page and technical methodology</span>
+        <a href="https://efrainfinance.com/work/merchant-revenue-forecasting/">efrainfinance.com/work/merchant-revenue-forecasting</a><br />
+        <a href="https://github.com/ecastillo081/Merchant_Revenue_Forecasting">github.com/ecastillo081/Merchant_Revenue_Forecasting</a>
       </div>
     </footer>
   </section>

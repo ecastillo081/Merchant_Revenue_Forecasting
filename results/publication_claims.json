@@ -1,0 +1,40 @@
+{
+  "primary_metric": "Unweighted mean of merchant-level MAPE",
+  "primary_window": "2024",
+  "n_merchants": 50,
+  "selected_model": "Holt",
+  "selected_mean_mape": 8.641150881505478,
+  "selected_median_mape": 8.398878641022268,
+  "selected_iqr_mape": 2.7271514379518313,
+  "selected_best_count": 17,
+  "selected_best_pct": 34.0,
+  "baseline_model": "Seasonal Naive",
+  "baseline_mean_mape": 12.467240883069458,
+  "point_difference": 3.82609000156398,
+  "relative_reduction_pct": 30.689147963442487,
+  "rolling_common_winner": "SES",
+  "rolling_common_winner_mean_mape": 9.747877840437118,
+  "selected_rolling_mean_mape": 9.884554538983975,
+  "recommend_as_default": false,
+  "complex_model_notes": [
+    "SARIMA had a mean merchant-level MAPE of 11.81%",
+    "Driver Scenario Regression had a mean merchant-level MAPE of 12.48%",
+    "Holt-Winters had a mean merchant-level MAPE of 9.54%"
+  ],
+  "representative_merchant": {
+    "merchant_id": "M048",
+    "selected_model": "Holt",
+    "window": "2024",
+    "merchant_mape": 8.37896739523613,
+    "median_mape": 8.398878641022268,
+    "selection_rule": "Merchant whose Holt MAPE is closest to the 2024 median merchant-level MAPE for that model."
+  },
+  "display": {
+    "selected_mean_mape": "8.64",
+    "baseline_mean_mape": "12.47",
+    "point_difference": "3.83",
+    "relative_reduction_pct": "30.7",
+    "selected_best_count": 17,
+    "selected_best_pct": "34"
+  }
+}

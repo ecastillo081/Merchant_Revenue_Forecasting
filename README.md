@@ -2,22 +2,23 @@
 
 ## Executive Summary
 
-This is a **self-directed finance analytics / forecasting portfolio project** that benchmarks nine monthly revenue forecasting methods across a synthetic merchant portfolio.
+This is a **self-directed finance analytics / FP&A portfolio project**. It answers a planning question: which method should Finance use as the default 12-month merchant-revenue forecast, and when should merchant-level performance justify an exception?
 
 - **50 synthetic merchants**
 - **60 months** of history (January 2020 – December 2024)
-- **9 forecasting methods** evaluated on a common holdout
-- **Holt** produced the lowest mean MAPE at approximately **8.6%**
-- **Seasonal Naive** baseline mean MAPE was approximately **12.5%**
-- That is approximately a **31% relative reduction** in mean MAPE versus the Seasonal Naive baseline
+- **9 forecasting methods** evaluated on a common 12-month horizon
+- Primary 2024 holdout: **Holt** produced the lowest unweighted mean of merchant-level MAPE at **8.64%**
+- **Seasonal Naive** baseline: **12.47%**
+- That is a **3.83 percentage-point** improvement, or a **30.7% relative reduction** versus Seasonal Naive
+- Rolling-origin results **do not** support Holt as a time-robust default: **SES** had the lowest average error across 2022–2024
 
 The dataset is fully synthetic. It is designed to resemble realistic FP&A forecasting challenges and does **not** contain real merchant, employer, or customer data.
 
 ## Business Question
 
-How can Finance improve monthly merchant revenue forecasting across a heterogeneous merchant portfolio, and which forecasting method provides the best balance of accuracy, stability, and interpretability?
+Which forecasting method should Finance use as the default 12-month merchant-revenue forecast, and when should merchant-level performance justify an exception?
 
-In an FP&A setting, the practical decision is which method to prefer for merchant-level planning support: a simple seasonal baseline, a classical smoothing approach, a seasonal time-series model, or a driver-based regression model.
+Finance needs a consistent, defensible forecast across merchants with different growth, seasonality, and volatility. The practical decision is to choose a default planning method and establish exception rules—not to crown a model because it is more sophisticated.
 
 ## Dataset
 
@@ -33,75 +34,110 @@ In an FP&A setting, the practical decision is which method to prefer for merchan
 
 ## Forecasting Approaches
 
-The **portfolio pipeline** (`source/all_merchants.py`) benchmarks nine methods:
+The portfolio pipeline (`source/all_merchants.py`) benchmarks nine methods on the same cutoff and 12-month horizon:
 
 | Group | Methods |
 |-------|---------|
 | Baselines | Naive, Seasonal Naive, SMA(3), WMA(1,2,3) |
 | Classical smoothing | SES, Holt, Holt-Winters |
 | Time series | SARIMA |
-| Driver-based | Linear Regression (marketing spend, promo flag, macro index, lagged revenue, month effects) |
+| Driver-based | Driver Scenario Regression |
 
-A single-merchant example script produces an illustrative actual-vs-forecast chart for merchant `M001`. That example is intentionally lighter than the full nine-model portfolio benchmark.
+**Driver Scenario Regression** is a scenario-conditioned planning forecast, not a pure univariate forecast. At the origin it may use only training-period information plus explicit planning assumptions:
+
+- Marketing-spend plan: same calendar month in the prior year from training data
+- Promotion plan: prior-year promotion calendar from training data
+- Macro assumption: last known training-period value, carried forward
+- `rev_lag1`: recursive predicted revenue after the first forecast month
+- `rev_lag12`: corresponding known historical value on a 12-month horizon
+
+It does **not** use holdout-period revenue, marketing spend, promotions, macro outcomes, or backfilled lags.
+
+A representative-merchant chart is selected programmatically: the merchant whose Holt MAPE is closest to the 50-merchant median. That example currently is `M048`.
 
 ## Evaluation Methodology
 
 - **Horizon:** 12-month-ahead forecast
-- **Train / test split:** For each merchant, the final 12 months are held out for testing; earlier months are used for training
-- **Primary comparison metric:** MAPE (mean absolute percentage error), useful for comparing relative error across merchants of different scale
-- **Supporting metrics:** RMSE, MAE, sMAPE, and MASE
+- **Primary window:** train through December 2023; hold out calendar 2024
+- **Rolling origins:** forecast 2022 from December 2021; 2023 from December 2022; 2024 from December 2023
+- **Primary ranking metric:** unweighted mean of merchant-level MAPE. This is **not** overall portfolio MAPE and **not** a revenue-weighted accuracy score.
+- **Supporting metrics:** median MAPE, IQR of merchant-level MAPE, MAE, RMSE, sMAPE, MASE, and best-model counts
+- **Coverage:** every expected merchant/model/window combination is recorded. Ineligible methods are documented rather than silently skipped. The pipeline fails if an eligible model fails.
 
-Multiple metrics are reported because no single error measure is universally best. MAPE is convenient for portfolio comparison, while RMSE/MAE emphasize absolute error and MASE provides a scale-free check relative to a seasonal naive benchmark.
+SARIMA and Driver Scenario Regression require 36 months of training history, so they are not eligible for the 2022 window. Like-for-like rolling ranks use the seven methods available in every window.
+
+Committed verification files:
+
+- [`results/model_performance_summary.csv`](results/model_performance_summary.csv)
+- [`results/merchant_model_metrics.csv`](results/merchant_model_metrics.csv)
+- [`results/best_model_counts.csv`](results/best_model_counts.csv)
+- [`results/rolling_window_summary.csv`](results/rolling_window_summary.csv)
+- [`results/coverage_report.csv`](results/coverage_report.csv)
 
 ## Key Findings
 
-Verified mean MAPE ranking across all 50 merchants:
+Verified 2024 holdout ranking, unweighted mean of merchant-level MAPE:
 
-| Rank | Model | Mean MAPE |
-|------|-------|-----------|
-| 1 | Holt | ~8.64% |
-| 2 | SES | ~9.08% |
-| 3 | SMA(3) | ~9.34% |
-| 4 | Holt-Winters | ~9.54% |
-| 5 | WMA(1,2,3) | ~9.60% |
-| 6 | Linear Regression | ~9.66% |
-| 7 | Naive | ~11.68% |
-| 8 | SARIMA | ~11.81% |
-| 9 | Seasonal Naive | ~12.47% |
+| Rank | Model | Mean MAPE | Median MAPE | IQR | Best-model count | Best-model % |
+|------|-------|-----------|-------------|-----|------------------|--------------|
+| 1 | Holt | 8.64% | 8.40% | 2.73 | 17 | 34% |
+| 2 | SES | 9.08% | 8.69% | 2.28 | 7 | 14% |
+| 3 | SMA(3) | 9.34% | 8.87% | 2.89 | 5 | 10% |
+| 4 | Holt-Winters | 9.54% | 9.19% | 2.35 | 8 | 16% |
+| 5 | WMA(1,2,3) | 9.60% | 9.34% | 2.68 | 4 | 8% |
+| 6 | Naive | 11.68% | 10.04% | 8.12 | 3 | 6% |
+| 7 | SARIMA | 11.81% | 11.02% | 4.56 | 3 | 6% |
+| 8 | Seasonal Naive | 12.47% | 12.03% | 3.70 | 1 | 2% |
+| 9 | Driver Scenario Regression | 12.48% | 11.98% | 4.17 | 2 | 4% |
 
-**Headline result:** Holt achieved the lowest mean MAPE (~8.6%) versus Seasonal Naive (~12.5%), an approximate **31% relative reduction** in mean MAPE.
+**Headline 2024 result:** Holt achieved the lowest mean merchant-level MAPE (8.64%) versus Seasonal Naive (12.47%), a 3.83 percentage-point improvement and a 30.7% relative reduction.
 
-**Governance takeaway:** Greater model complexity did not guarantee better average performance. SARIMA, for example, was not among the strongest average performers in this benchmark. Method selection should be evidence-based and refreshed as new observations arrive.
+**Complexity did not automatically help:** after origin-safe assumptions replaced leaked holdout drivers, Driver Scenario Regression (12.48%) and SARIMA (11.81%) underperformed simpler smoothing methods.
 
-Best-model counts also vary by merchant (Holt was most frequently best by MAPE, followed by Linear Regression and Holt-Winters), reinforcing that portfolio averages and merchant-level results should be reviewed together.
+**Merchant-level variation:** Holt was best for 17 of 50 merchants (34%). Holt-Winters was next at 8 merchants (16%). No method won everywhere.
+
+Rolling-window mean merchant-level MAPE for methods eligible in every window:
+
+| Rank | Model | 2022 | 2023 | 2024 | Average |
+|------|-------|------|------|------|---------|
+| 1 | SES | 10.73% | 9.42% | 9.08% | 9.75% |
+| 2 | SMA(3) | 10.31% | 9.87% | 9.34% | 9.84% |
+| 3 | Holt | 12.31% | 8.71% | 8.64% | 9.88% |
+
+Holt won the 2023 and 2024 origins but was weaker in 2022. SES had the most stable average. SARIMA and Driver Scenario Regression are excluded from that like-for-like rank because they were not eligible in 2022; in 2023 both were materially worse than the smoothing methods.
+
+## Planning Recommendation
+
+Use a **champion/challenger** policy rather than locking Holt in as a permanent default.
+
+1. Treat Holt as the 2024 champion for the latest 12-month holdout.
+2. Keep Seasonal Naive as the minimum-performance benchmark every cycle.
+3. Continue SES and SMA(3) as challengers, because they were stronger or more stable across rolling origins.
+4. Allow a merchant-level override only when another method produces consistently lower error across multiple forecast windows.
+5. Maintain a high-uncertainty watchlist for merchants with persistently elevated or volatile forecast error. Those merchants should receive wider planning ranges, additional business-partner input, and explicit upside/downside scenarios.
 
 ## Finance / FP&A Implications
 
-Lower and more stable merchant-level forecast error can support:
+A governable planning process needs a transparent champion, an objective baseline, and exception rules. Lower merchant-level forecast error can support budgeting and revenue planning, but this project does **not** estimate dollar savings, claim production deployment, or assert real employer outcomes.
 
-- budgeting and revenue planning
-- resource allocation discussions
-- scenario planning around uncertain merchants
-- identifying where forecast uncertainty is persistently higher
-
-This project does **not** estimate dollar savings, claim production deployment, or assert real employer outcomes. The value demonstrated here is methodological: a transparent, reproducible framework for comparing forecasting approaches before using them in planning workflows.
+**Takeaway for finance leaders:** The best forecasting process is not necessarily the most technically complex. A transparent default-or-champion model, an objective baseline, and disciplined exception monitoring can provide a more governable planning process than selecting models by sophistication alone.
 
 ## Visual Results
 
-### Average forecast error (MAPE)
-![Average MAPE leaderboard](figures/leaderboard_MAPE.png)
+### Mean merchant-level forecast error
+![Mean merchant-level MAPE leaderboard](figures/leaderboard_MAPE.png)
 
-Portfolio-level comparison of mean MAPE by method. Holt is lowest (~8.6%); Seasonal Naive is the weakest baseline (~12.5%).
+Unweighted MAPE across 50 merchants; 12-month 2024 holdout. Holt is lowest (8.64%); Seasonal Naive is the planning baseline (12.47%).
 
-### Distribution of errors (boxplot)
+### Distribution of merchant-level errors
 ![MAPE boxplot by model](figures/boxplot_MAPE.png)
 
-Spread of merchant-level MAPE by method. Useful for assessing consistency, not only average error.
+Same model order as the leaderboard. Whiskers are 1.5× IQR. Holt combined low average error with a comparatively contained distribution versus weaker methods, although no method eliminated variation across merchants.
 
-### Example merchant forecast
-![M001 actual vs forecast](figures/M001_actual_vs_forecast.png)
+### Representative merchant forecast
+![M048 actual vs Holt and Seasonal Naive](figures/representative_merchant_forecast.png)
 
-Actual versus forecast paths for merchant `M001` over the 12-month test window (illustrative single-merchant view).
+Merchant `M048` is shown because its Holt MAPE (8.38%) is closest to the 50-merchant median (8.40%). The chart compares actual revenue with Holt and Seasonal Naive only.
 
 ## Repository Structure
 
@@ -110,18 +146,24 @@ data/
   generator/data_generator.py          # synthetic data generator (seed=42)
   raw/merchant_monthly_revenue.xlsx    # synthetic panel dataset
   raw/merchant_monthly_data_dictionary.json
-  transformed/                         # generated Excel outputs (not committed)
+  transformed/                         # optional diagnostic Excel outputs (not committed)
 functions/
-  forecast_methods.py                  # forecast helpers + horizon H=12
+  config.py                            # windows, model names, eligibility rules
+  forecast_methods.py                  # origin-safe forecast helpers + horizon H=12
+  planning_assumptions.py              # driver plans constructed from training data
+  evaluation.py                        # merchant-window evaluation and coverage
   metrics.py                           # MAPE, RMSE, MAE, sMAPE, MASE
 source/
-  all_merchants.py                     # full 9-model portfolio benchmark
-  single_merchant_forecast.py          # illustrative M001 forecasts
-  single_merchant_forecast_metrics.py  # M001 metrics
+  all_merchants.py                     # full 9-model rolling benchmark
+  single_merchant_forecast.py          # optional diagnostic
+  single_merchant_forecast_metrics.py  # optional diagnostic
 plots/
   forecasting_leaderboard.py           # leaderboard + boxplot figures
-  single_merchant_graphs.py            # M001 actual-vs-forecast figure
+  representative_merchant.py           # median-merchant actual-vs-forecast figure
+results/                               # committed verification CSVs
 figures/                               # publication figures
+case-study/                            # two-page executive PDF source
+tests/                                 # leakage, coverage, and reconciliation tests
 requirements.txt
 README.md
 ```
@@ -145,14 +187,18 @@ pip install -r requirements.txt
 # Regenerate synthetic raw data and dictionary (optional; committed raw file already exists)
 python data/generator/data_generator.py
 
-# Run the full portfolio model comparison
+# Run the full portfolio model comparison, including rolling windows
 python source/all_merchants.py
 
-# Generate portfolio figures (requires leaderboard.xlsx from the step above)
+# Generate publication figures from committed result files
 python plots/forecasting_leaderboard.py
+python plots/representative_merchant.py
 
-# Optional: regenerate the illustrative single-merchant figure
-python plots/single_merchant_graphs.py
+# Optional: regenerate the two-page case-study PDF
+python case-study/generate_pdf.py
+
+# Leakage, coverage, and publication-reconciliation tests
+pytest
 ```
 
 No cloud services, API keys, or environment variables are required.
@@ -160,12 +206,14 @@ No cloud services, API keys, or environment variables are required.
 ## Validation & Limitations
 
 - The dataset is **synthetic**; results may differ on real merchant businesses
-- Merchants are heterogeneous; portfolio averages can hide merchant-level differences
-- Forecast quality should be reviewed both at the portfolio level and by merchant
-- This repository demonstrates a benchmarking framework; it is **not** a production forecasting service
-- Results are associative evaluation outcomes, not causal claims about business interventions
+- Headline MAPE is an **unweighted mean across merchants** and should not be read as portfolio-dollar forecast error
+- Merchants are heterogeneous; averages can hide merchant-level differences
+- Driver Scenario Regression depends on planning assumptions available at the forecast origin
+- SARIMA and Driver Scenario Regression were not eligible for the 2022 rolling window
 - Model rankings should be refreshed as new months of data arrive
-- The single-merchant example does not implement every portfolio model; use `source/all_merchants.py` for the full nine-model comparison
+- This repository demonstrates a benchmarking and forecast-governance framework; it is **not** a production forecasting service
+- Results are associative evaluation outcomes, not causal claims about business interventions
+- Automated tests in `tests/` confirm that forecasts do not read holdout actuals or holdout actual drivers, that training rows never occur after the cutoff, that recursive `rev_lag1` uses predictions, and that no future-looking backfill is applied
 
 ## Tools
 
@@ -176,3 +224,5 @@ No cloud services, API keys, or environment variables are required.
 - scikit-learn
 - matplotlib
 - openpyxl
+- pytest
+- pymupdf
