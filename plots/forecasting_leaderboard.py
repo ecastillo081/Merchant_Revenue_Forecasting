@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from functions.config import BASELINE_MODEL, COLOR_INK, COLOR_MUTED, PRIMARY_METRIC, PRIMARY_WINDOW
+from functions.config import COLOR_INK, COLOR_MUTED, PRIMARY_METRIC, PRIMARY_WINDOW
 from plots.style import apply_style, model_color, savefig
 
 RESULTS_DIR = ROOT / "results"
@@ -52,15 +52,25 @@ def plot_leaderboard(summary: pd.DataFrame, claims: dict, save_path: Path) -> No
     )
     ax.set_ylabel("Mean merchant-level MAPE (%)")
     ax.set_xlabel("")
-    ax.set_title("Mean Merchant-Level Forecast Error by Model", loc="left", pad=12, fontweight=650)
-    ax.text(
-        0,
-        1.02,
+    ax.set_title(
+        "Mean Merchant-Level Forecast Error by Model",
+        loc="left",
+        pad=36,
+        fontweight=650,
+    )
+    subtitle = ax.annotate(
         "Unweighted MAPE across 50 merchants; 12-month 2024 holdout",
-        transform=ax.transAxes,
+        xy=(0, 1),
+        xycoords="axes fraction",
+        xytext=(0, 8),
+        textcoords="offset points",
+        ha="left",
+        va="bottom",
         color=COLOR_MUTED,
         fontsize=9.5,
+        annotation_clip=False,
     )
+    subtitle.set_clip_on(False)
     ax.yaxis.grid(True, linestyle=":", alpha=0.55, zorder=0)
     ax.set_axisbelow(True)
     plt.xticks(rotation=28, ha="right")
@@ -79,21 +89,6 @@ def plot_leaderboard(summary: pd.DataFrame, claims: dict, save_path: Path) -> No
             textcoords="offset points",
         )
 
-    d = claims["display"]
-    ax.text(
-        0.01,
-        0.97,
-        (
-            f"{selected} is {d['point_difference']} percentage points lower than "
-            f"{BASELINE_MODEL}\n({d['relative_reduction_pct']}% relative reduction in mean MAPE)"
-        ),
-        transform=ax.transAxes,
-        ha="left",
-        va="top",
-        fontsize=8.7,
-        color=COLOR_INK,
-        bbox={"boxstyle": "round,pad=0.35", "facecolor": "#f5f4f1", "edgecolor": "#d6d2c8"},
-    )
     savefig(save_path, fig)
 
 

@@ -47,7 +47,7 @@ def set_metadata_and_render() -> None:
         {
             "title": "Merchant Revenue Forecasting",
             "author": "Efrain Castillo",
-            "subject": "FP&A case study: default 12-month merchant revenue forecast method",
+            "subject": "FP&A case study: selecting a standard method for 12-month merchant revenue planning",
             "keywords": "FP&A, forecasting, merchant revenue, Holt, synthetic data, planning",
             "creator": "Merchant Revenue Forecasting case-study generator",
         }

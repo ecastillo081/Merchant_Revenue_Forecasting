@@ -247,8 +247,30 @@ p {
   max-height: 3.5in;
 }
 
+.page-2 .figure-block {
+  margin-bottom: 4px;
+}
+
 .page-2 .figure-block img {
-  max-height: 2.15in;
+  max-height: 1.88in;
+}
+
+.page-2 .figure-caption {
+  margin-top: 2px;
+}
+
+.page-2 .split-notes {
+  margin-top: 4px;
+}
+
+.page-2 .takeaway {
+  margin-top: 4px;
+  padding: 6px 9px;
+}
+
+.page-2 .doc-footer {
+  margin-top: 6px;
+  padding-top: 5px;
 }
 
 .figure-caption {
